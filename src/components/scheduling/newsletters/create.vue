@@ -24,8 +24,9 @@
         :disabled="isSaving"
         @change="setDeploymentDates"
       />
-      <!-- Hidden tab stop for proper button focus -->
-      <span v-if="sections.length" tabindex="0" />
+      <div class="bmc-schedule-field">
+       <edit-sequence :value="sequence" :disabled="isSaving" @change="setSequence" />
+      </div>
       <operation-error
         :error="error"
         wrapper-class="bmc-operation-error--margin-top"
@@ -40,6 +41,7 @@
 import mutation from '../../../graphql/scheduling/mutations/create-email-schedules';
 import DeploymentDates from './deployment-dates.vue';
 import SelectSections from './select-sections.vue';
+import EditSequence from './edit-sequence.vue';
 import AddButton from '../buttons/add.vue';
 import OperationError from '../../operation-error.vue';
 
@@ -58,6 +60,7 @@ export default {
     isSaving: false,
     sections: [],
     deploymentDates: [],
+    sequence: 0,
     error: null,
   }),
 
@@ -66,6 +69,7 @@ export default {
     SelectSections,
     OperationError,
     DeploymentDates,
+    EditSequence,
   },
 
   computed: {
@@ -87,10 +91,15 @@ export default {
       this.deploymentDates = dates;
     },
 
+    setSequence(sequence) {
+      this.sequence = sequence;
+    },
+
     cancel() {
       this.error = null;
       this.sections = [];
       this.deploymentDates = [];
+      this.sequence = 0;
     },
 
     async save() {
@@ -100,12 +109,14 @@ export default {
         contentId: this.contentId,
         sectionIds: this.sections.map(section => section.id),
         deploymentDates: this.deploymentDates.map(date => date.valueOf()),
+        sequence: this.sequence,
       };
 
       try {
         await this.$apollo.mutate({ mutation, variables: { input }, refetchQueries: ['ListEmailSchedules'] });
         this.sections = [];
         this.deploymentDates = [];
+        this.sequence = 0;
       } catch (e) {
         this.error = e;
       } finally {
