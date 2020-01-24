@@ -1,6 +1,6 @@
 <template>
   <div class="bmc-input-group">
-    <div class="bmc-input-group__prepend">
+    <div class="bmc-input-group__prepend" tabindex="-1">
       <div class="bmc-input-group__text">Sequence</div>
     </div>
     <input
