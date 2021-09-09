@@ -4,10 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "clean": "rimraf dist",
-    "build": "yarn clean && yarn build:version",
-    "build:version": "scripts/build.sh $npm_package_version",
-    "build:help": "vue-cli-service build --help",
+    "build": "vue-cli-service build --target lib --inline-vue --name BMCObject --filename bmc --formats umd-min src/lib.js",
     "inspect": "vue-cli-service inspect",
     "lint": "vue-cli-service lint",
     "test": "yarn lint"
