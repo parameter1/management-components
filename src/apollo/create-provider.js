@@ -9,6 +9,7 @@ export default ({ graphqlUri, tenantKey, baseApiUri } = {}) => {
   const headers = {
     'x-tenant-key': tenantKey,
     'x-base4-api-uri': apiUri,
+    'x-cache-responses': 'false',
   };
   return new VueApollo({
     defaultClient: createApolloClient({ uri: graphqlUri, headers }),
