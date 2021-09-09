@@ -52,16 +52,16 @@
   <body>
     <script>
       bmc('configure', {
-        graphqlUri: 'https://caprica.graphql-staging.base-cms.io',
-        tenantKey: 'acbm_fcp',
-        baseApiUri: 'https://manage.forconstructionpros.com',
+        graphqlUri: 'https://graphql.tauron.base.parameter1.com',
+        tenantKey: 'p1_sandbox',
+        baseApiUri: 'https://p1-sandbox.manage.base.parameter1.com',
         debug: true,
       });
 
       bmc('loadComponent', {
         name: 'scheduling',
         el: '#component-scheduling',
-        props: { contentId: 21091788 },
+        props: { contentId: 21577444 },
       });
 
       bmc('loadComponent', {
@@ -73,7 +73,7 @@
       bmc('loadComponent', {
         name: 'primary-section',
         el: '#component-primary-section-preselected',
-        props: { sectionId: 54320 },
+        props: { sectionId: 64017 },
         on: { change: (section) => console.log('primary-section change', section) }
       });
 

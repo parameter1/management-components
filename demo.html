@@ -3,21 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title>bmc demo</title>
-    <script async src="./dist/0.9.0/bmc.umd.min.js"></script>
+    <script async src="./dist/bmc.umd.min.js"></script>
     <script>
       (function(w, f) {
         var l = f + 'Queue'; w[l] = w[l] || [];
         w[f] = w[f] || function() { w[l].push(arguments); };
       })(window, 'bmc');
     </script>
-    <link rel="stylesheet" href="./dist/0.9.0/bmc.css">
+    <link rel="stylesheet" href="./dist/bmc.css">
   </head>
   <body>
     <script>
       bmc('configure', {
-        graphqlUri: 'https://caprica.graphql-staging.base-cms.io',
-        tenantKey: 'acbm_fcp',
-        baseApiUri: 'https://manage.forconstructionpros.com',
+        graphqlUri: 'https://graphql.tauron.base.parameter1.com',
+        tenantKey: 'p1_sandbox',
+        baseApiUri: 'https://p1-sandbox.manage.base.parameter1.com',
         debug: true,
       });
     </script>
@@ -33,12 +33,12 @@
       bmc('loadComponent', {
         name: 'scheduling',
         el: '#component-scheduling',
-        props: { contentId: 21091788 },
+        props: { contentId: 21577444 },
       });
       bmc('loadComponent', {
         name: 'primary-section',
         el: '#component-primary-section',
-        props: { sectionId: 54320 },
+        props: { sectionId: 64017 },
         on: { change: (section) => console.log('primary-section change', section) }
       });
     </script>
