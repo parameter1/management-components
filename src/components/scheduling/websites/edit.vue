@@ -59,8 +59,8 @@ import mutation from '../../../graphql/scheduling/mutations/update-website-sched
 import EditDate from '../../edit-date.vue';
 import SectionSelect from './section-select.vue';
 import OptionSelect from './option-select.vue';
-import CancelButton from '../buttons/cancel.vue';
-import SaveButton from '../buttons/save.vue';
+import CancelButton from '../../common/buttons/cancel.vue';
+import SaveButton from '../../common/buttons/save.vue';
 import OperationError from '../../operation-error.vue';
 
 const clearSeconds = (date) => {

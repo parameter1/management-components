@@ -38,8 +38,8 @@ import Vue from 'vue';
 import mutation from '../../../graphql/scheduling/mutations/update-magazine-schedule';
 import SelectIssue from './select-issue.vue';
 import SelectSection from './select-section.vue';
-import CancelButton from '../buttons/cancel.vue';
-import SaveButton from '../buttons/save.vue';
+import CancelButton from '../../common/buttons/cancel.vue';
+import SaveButton from '../../common/buttons/save.vue';
 import OperationError from '../../operation-error.vue';
 
 export default {
