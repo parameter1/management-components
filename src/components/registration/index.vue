@@ -42,7 +42,7 @@
       </div>
     </div>
     <div class="bmc-schedule-edit__buttons">
-      <cancel-button :disabled="isSaving" @click="cancel" />
+      <cancel-button :disabled="isSaveDisabled" @click="cancel" />
       <save-button :disabled="isSaveDisabled" :is-loading="isSaving" @click="update" />
     </div>
     <operation-error
