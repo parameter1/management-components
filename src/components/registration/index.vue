@@ -1,0 +1,259 @@
+<template>
+  <div class="bmc-primary-section-component">
+    <loading-spinner v-if="isLoading" color="primary" size="small" />
+    <div v-if="content">
+      <div class="bmc-user-registration-field">
+        <div class="bmc-user-registration-field-label">
+          {{ description }}
+        </div>
+        <input
+          :checked="required"
+          type="checkbox"
+          class="custom-control-input"
+          @change="handleIsRequiredChange()"
+        >
+        <span class="bmc-user-registration-field-label">
+          {{ label }}
+        </span>
+      </div>
+      <div class="bmc-schedule-field">
+        <edit-date
+          :value="currentStartDate"
+          :max="currentEndDate"
+          :disabled="(isSaving || !required)"
+          :can-clear="true"
+          placeholder="Pick a start date..."
+          title="Start Date"
+          @change="setStartDate"
+          ref="currentStartDate"
+        />
+      </div>
+      <div class="bmc-schedule-field">
+        <edit-date
+          :value="currentEndDate"
+          :min="currentStartDate"
+          :disabled="(isSaving || !required)"
+          :can-clear="true"
+          placeholder="Pick an end date..."
+          title="End Date"
+          @change="setEndDate"
+          ref="currentEndDate"
+        />
+      </div>
+    </div>
+    <div class="bmc-schedule-edit__buttons">
+      <cancel-button :disabled="isSaving" @click="cancel" />
+      <save-button :disabled="isSaveDisabled" :is-loading="isSaving" @click="update" />
+    </div>
+    <operation-error
+      :error="error"
+      :can-cancel="false"
+      @retry="load"
+    />
+  </div>
+</template>
+
+<script>
+import gql from 'graphql-tag';
+import mutation from '../../graphql/common/mutations/update-user-registration';
+import EditDate from '../edit-date.vue';
+import CancelButton from '../common/buttons/cancel.vue';
+import SaveButton from '../common/buttons/save.vue';
+import LoadingSpinner from '../loading-spinner.vue';
+import OperationError from '../operation-error.vue';
+
+const query = gql`
+  query LoadContentRegistration($input: ContentQueryInput!) {
+    content(input: $input) {
+      id
+      name
+      userRegistration {
+        isRequired
+        sites {
+          name
+        }
+        siteIds
+        startDate
+        endDate
+      }
+    },
+  },
+`;
+const clearSeconds = (date) => {
+  if (date) {
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+  }
+};
+export default {
+  props: {
+    contentId: {
+      type: Number,
+      default: null,
+    },
+    description: {
+      type: String,
+      default: 'Does the user need to be logged in to access this content?',
+    },
+    label: {
+      type: String,
+      default: 'Yes',
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+  },
+
+  data: () => ({
+    content: null,
+    required: false,
+    startDate: null,
+    endDate: null,
+    selectedStartDate: undefined,
+    selectedEndDate: undefined,
+    isSaving: false,
+    isLoading: false,
+    error: null,
+  }),
+
+  components: {
+    EditDate,
+    CancelButton,
+    SaveButton,
+    OperationError,
+    LoadingSpinner,
+  },
+
+  computed: {
+    currentStartDate() {
+      return this.selectedStartDate;
+    },
+    hasStartDateChanged() {
+      // return this.currentStartDate.valueOf() !== this.startDate.valueOf();
+      // Current end date is set but initial was empty.
+      if (this.currentStartDate && !this.startDate) return true;
+      // Current end date is empty but initial was set.
+      if (!this.currentStartDate && this.startDate) return true;
+      // Both current and initial are empty.
+      if (!this.currentStartDate && !this.startDate) return false;
+      // Compare date values.
+      return this.currentStartDate.valueOf() !== this.startDate.valueOf();
+    },
+    currentEndDate() {
+      return this.selectedEndDate;
+    },
+    hasEndDateChanged() {
+      // Current end date is set but initial was empty.
+      if (this.currentEndDate && !this.endDate) return true;
+      // Current end date is empty but initial was set.
+      if (!this.currentEndDate && this.endDate) return true;
+      // Both current and initial are empty.
+      if (!this.currentEndDate && !this.endDate) return false;
+      // Compare date values.
+      return this.currentEndDate.valueOf() !== this.endDate.valueOf();
+    },
+    hasRequiredChange() {
+      if (!this.content) return false;
+      return this.content.userRegistration.isRequired !== this.required;
+    },
+    hasChanged() {
+      return this.hasStartDateChanged || this.hasEndDateChanged || this.hasRequiredChange;
+    },
+    isSaveDisabled() {
+      return !this.hasChanged || this.isSaving;
+    },
+  },
+
+  mounted() {
+    this.load();
+  },
+
+  methods: {
+    setStartDate(date) {
+      this.selectedStartDate = date || undefined;
+      console.log('hitting: ', this.selectedStartDate);
+    },
+    setEndDate(date) {
+      this.selectedEndDate = date || undefined;
+    },
+    cancel() {
+      return this.$emit('cancel');
+    },
+    handleIsRequiredChange() {
+      const { required } = this;
+      // if unchecking the current this.required = true
+      if (require) {
+        // clear start end on uncheck
+        this.$refs.currentStartDate.clear();
+        this.$refs.currentEndDate.clear();
+      }
+      this.required = !required;
+    },
+    async load() {
+      const { contentId } = this;
+      if (contentId && !this.isLoading) {
+        this.isLoading = true;
+        this.error = null;
+        const input = { id: contentId };
+        try {
+          const { data } = await this.$apollo.query({ query, variables: { input } });
+          const { content } = data;
+
+          if (content) {
+            this.content = data.content;
+            const { startDate, endDate, isRequired } = this.content.userRegistration || {};
+            this.startDate = startDate ? new Date(startDate) : null;
+            this.selectedStartDate = this.startDate;
+            this.endDate = endDate ? new Date(endDate) : null;
+            this.selectedEndDate = this.endDate;
+            this.required = isRequired || false;
+          }
+        } catch (e) {
+          this.error = e;
+        } finally {
+          this.isLoading = false;
+        }
+      }
+    },
+    async update() {
+      this.error = null;
+      this.isSaving = true;
+
+      // Set seconds and milliseconds to zero
+      const {
+        currentStartDate,
+        currentEndDate,
+        required,
+      } = this;
+      clearSeconds(currentStartDate);
+      clearSeconds(currentEndDate);
+
+      const payload = {
+        isRequired: Boolean(required),
+        ...(currentStartDate && { startDate: currentStartDate.valueOf() }),
+        ...(currentEndDate && { endDate: currentEndDate.valueOf() }),
+      };
+      const input = { id: this.contentId, payload };
+
+      try {
+        await this.$apollo.mutate({ mutation, variables: { input } });
+        this.$emit('update');
+      } catch (e) {
+        this.error = e;
+      } finally {
+        this.isSaving = false;
+      }
+    },
+  },
+};
+</script>
+
+<style lang="scss">
+@import "../../scss/variables";
+@import "../../scss/mixins";
+
+.bmc-primary-section-component {
+  @include bmc-base();
+}
+</style>
