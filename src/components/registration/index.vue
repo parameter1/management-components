@@ -7,7 +7,7 @@
           {{ description }}
         </div>
         <input
-          :checked="required"
+          :checked="currentRequired"
           type="checkbox"
           class="custom-control-input"
           @change="handleIsRequiredChange()"
@@ -110,6 +110,7 @@ export default {
     required: false,
     startDate: null,
     endDate: null,
+    currentRequired: false,
     selectedStartDate: undefined,
     selectedEndDate: undefined,
     isSaving: false,
@@ -154,8 +155,7 @@ export default {
       return this.currentEndDate.valueOf() !== this.endDate.valueOf();
     },
     hasRequiredChange() {
-      if (!this.content) return false;
-      return this.content.userRegistration.isRequired !== this.required;
+      return this.currentRequired !== this.required;
     },
     hasChanged() {
       return this.hasStartDateChanged || this.hasEndDateChanged || this.hasRequiredChange;
@@ -172,23 +172,34 @@ export default {
   methods: {
     setStartDate(date) {
       this.selectedStartDate = date || undefined;
-      console.log('hitting: ', this.selectedStartDate);
     },
     setEndDate(date) {
       this.selectedEndDate = date || undefined;
     },
     cancel() {
+      const { startDate, endDate } = this;
+      // reset selected items
+      this.selectedStartDate = startDate;
+      this.selectedEndDate = endDate;
+      this.currentRequired = this.required;
+
+      // Handle updating the child components for start/end
+      const start = startDate ? startDate.toISOString() : '';
+      const end = endDate ? endDate.toISOString() : '';
+      this.$refs.currentEndDate.reset(end);
+      this.$refs.currentStartDate.reset(start);
+
       return this.$emit('cancel');
     },
     handleIsRequiredChange() {
-      const { required } = this;
+      const { currentRequired } = this;
       // if unchecking the current this.required = true
-      if (require) {
+      if (currentRequired) {
         // clear start end on uncheck
         this.$refs.currentStartDate.clear();
         this.$refs.currentEndDate.clear();
       }
-      this.required = !required;
+      this.currentRequired = !currentRequired;
     },
     async load() {
       const { contentId } = this;
@@ -208,6 +219,7 @@ export default {
             this.endDate = endDate ? new Date(endDate) : null;
             this.selectedEndDate = this.endDate;
             this.required = isRequired || false;
+            this.currentRequired = this.required;
           }
         } catch (e) {
           this.error = e;
@@ -224,13 +236,13 @@ export default {
       const {
         currentStartDate,
         currentEndDate,
-        required,
+        currentRequired,
       } = this;
       clearSeconds(currentStartDate);
       clearSeconds(currentEndDate);
 
       const payload = {
-        isRequired: Boolean(required),
+        isRequired: Boolean(currentRequired),
         ...(currentStartDate && { startDate: currentStartDate.valueOf() }),
         ...(currentEndDate && { endDate: currentEndDate.valueOf() }),
       };
@@ -239,6 +251,11 @@ export default {
       try {
         await this.$apollo.mutate({ mutation, variables: { input } });
         this.$emit('update');
+        this.selectedStartDate = currentStartDate;
+        this.startDate = currentStartDate;
+        this.selectedEndDate = currentEndDate;
+        this.endDate = currentEndDate;
+        this.required = currentRequired;
       } catch (e) {
         this.error = e;
       } finally {
