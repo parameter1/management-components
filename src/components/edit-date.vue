@@ -128,6 +128,9 @@ export default {
       this.selectedValue = '';
       this.emitChange(this.selectedValue);
     },
+    reset(date) {
+      this.selectedValue = date;
+    },
     emitChange(value) {
       this.$emit('change', value ? new Date(value) : null);
     },
