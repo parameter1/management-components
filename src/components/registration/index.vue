@@ -41,7 +41,7 @@
     </div>
     <div class="bmc-registration-buttons">
       <cancel-button :disabled="isSaveDisabled" @click="cancel" />
-      <save-button :disabled="isSaveDisabled" :is-loading="isSaving" @click="update" />
+      <save-button v-if="enableSave" :disabled="isSaveDisabled" :is-loading="isSaving" @click="update" />
     </div>
     <operation-error
       :error="error"
@@ -79,6 +79,10 @@ const clearSeconds = (date) => {
 };
 export default {
   props: {
+    enableSave: {
+      type: Boolean,
+      default: true,
+    },
     contentId: {
       type: Number,
       default: null,
@@ -160,9 +164,11 @@ export default {
   methods: {
     setStartDate(date) {
       this.selectedStartDate = date || undefined;
+      this.modelChanged();
     },
     setEndDate(date) {
       this.selectedEndDate = date || undefined;
+      this.modelChanged();
     },
     cancel() {
       const { startDate, endDate } = this;
@@ -188,6 +194,20 @@ export default {
         this.$refs.currentEndDate.clear();
       }
       this.currentRequired = !currentRequired;
+      this.modelChanged();
+    },
+    modelChanged() {
+      const { currentRequired, currentStartDate, currentEndDate } = this;
+      console.log({
+        isRequired: currentRequired,
+        startDate: currentStartDate,
+        endDate: currentEndDate,
+      });
+      return this.$emit('userRegistrationChange', {
+        isRequired: currentRequired,
+        startDate: currentStartDate,
+        endDate: currentEndDate,
+      });
     },
     async load() {
       const { contentId } = this;
