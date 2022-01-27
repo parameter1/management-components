@@ -15,6 +15,7 @@ import './styles';
 Vue.use(VueApollo);
 
 const components = {
+  registration: () => import(/* webpackChunkName: "registration" */ './components/registration/index.vue'),
   scheduling: () => import(/* webpackChunkName: "scheduling" */ './components/scheduling/index.vue'),
   'primary-section': () => import(/* webpackChunkName: "primary-section" */ './components/primary-section/index.vue'),
   'primary-category': () => import(/* webpackChunkName: "primary-category" */ './components/primary-category/index.vue'),
