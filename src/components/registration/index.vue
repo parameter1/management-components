@@ -203,7 +203,7 @@ export default {
     },
     modelChanged() {
       const { currentRequired, currentStartDate, currentEndDate } = this;
-      this.$emit('userRegistrationChange', {
+      this.$emit('change', {
         isRequired: currentRequired,
         startDate: currentStartDate,
         endDate: currentEndDate,
