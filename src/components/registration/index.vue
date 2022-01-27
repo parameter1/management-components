@@ -2,25 +2,23 @@
   <div class="bmc-registration-component">
     <loading-spinner v-if="isLoading" color="primary" size="small" />
     <div v-if="content">
-      <div class="bmc-registration-field">
-        <div class="bmc-registration-field-label">
-          {{ description }}
-        </div>
+      <div class="bmc-registration-field bmc-registration-field--requires-registration">
         <input
+          id="requires-registration"
           :checked="currentRequired"
           type="checkbox"
           class="custom-control-input"
           @change="handleIsRequiredChange()"
         >
-        <span class="bmc-registration-field-label">
-          {{ label }}
-        </span>
+        <label for="requires-registration" class="bmc-registration-field-label">
+          {{ description }}
+        </label>
       </div>
       <div class="bmc-registration-field">
         <edit-date
           :value="currentStartDate"
           :max="currentEndDate"
-          :disabled="(isSaving || !required)"
+          :disabled="(isSaving || !currentRequired)"
           :can-clear="true"
           placeholder="Pick a start date..."
           title="Start Date"
@@ -32,7 +30,7 @@
         <edit-date
           :value="currentEndDate"
           :min="currentStartDate"
-          :disabled="(isSaving || !required)"
+          :disabled="(isSaving || !currentRequired)"
           :can-clear="true"
           placeholder="Pick an end date..."
           title="End Date"
@@ -56,6 +54,7 @@
 <script>
 import gql from 'graphql-tag';
 import mutation from '../../graphql/common/mutations/update-user-registration';
+import fragment from '../../graphql/common/fragments/user-registration';
 import EditDate from '../edit-date.vue';
 import CancelButton from '../common/buttons/cancel.vue';
 import SaveButton from '../common/buttons/save.vue';
@@ -65,19 +64,12 @@ import OperationError from '../operation-error.vue';
 const query = gql`
   query LoadContentRegistration($input: ContentQueryInput!) {
     content(input: $input) {
-      id
-      name
-      userRegistration {
-        isRequired
-        sites {
-          name
-        }
-        siteIds
-        startDate
-        endDate
-      }
-    },
-  },
+      ...ContentUserRegistrationFragment
+    }
+  }
+
+  ${fragment}
+
 `;
 const clearSeconds = (date) => {
   if (date) {
@@ -94,10 +86,6 @@ export default {
     description: {
       type: String,
       default: 'Does the user need to be logged in to access this content?',
-    },
-    label: {
-      type: String,
-      default: 'Yes',
     },
     disabled: {
       type: Boolean,
@@ -241,16 +229,16 @@ export default {
       clearSeconds(currentStartDate);
       clearSeconds(currentEndDate);
 
-      const payload = {
+      const input = {
+        id: this.contentId,
         isRequired: Boolean(currentRequired),
         ...(currentStartDate && { startDate: currentStartDate.valueOf() }),
         ...(currentEndDate && { endDate: currentEndDate.valueOf() }),
       };
-      const input = { id: this.contentId, payload };
 
       try {
-        await this.$apollo.mutate({ mutation, variables: { input } });
-        this.$emit('update');
+        const { data } = await this.$apollo.mutate({ mutation, variables: { input } });
+        this.$emit('update', data.contentUserRegistration);
         this.selectedStartDate = currentStartDate;
         this.startDate = currentStartDate;
         this.selectedEndDate = currentEndDate;
@@ -269,8 +257,5 @@ export default {
 <style lang="scss">
 @import "../../scss/variables";
 @import "../../scss/mixins";
-
-.bmc-registration-component {
-  @include bmc-base();
-}
+@import "../../scss/components/registration";
 </style>
