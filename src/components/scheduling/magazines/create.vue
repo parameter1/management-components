@@ -48,7 +48,7 @@ import Vue from 'vue';
 import mutation from '../../../graphql/scheduling/mutations/create-magazine-schedule';
 import SelectIssue from './select-issue.vue';
 import SelectSection from './select-section.vue';
-import AddButton from '../buttons/add.vue';
+import AddButton from '../../common/buttons/add.vue';
 import OperationError from '../../operation-error.vue';
 
 export default {

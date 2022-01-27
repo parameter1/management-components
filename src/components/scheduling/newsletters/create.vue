@@ -42,7 +42,7 @@ import mutation from '../../../graphql/scheduling/mutations/create-email-schedul
 import DeploymentDates from './deployment-dates.vue';
 import SelectSections from './select-sections.vue';
 import EditSequence from './edit-sequence.vue';
-import AddButton from '../buttons/add.vue';
+import AddButton from '../../common/buttons/add.vue';
 import OperationError from '../../operation-error.vue';
 
 export default {

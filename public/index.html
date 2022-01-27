@@ -59,6 +59,12 @@
       });
 
       bmc('loadComponent', {
+        name: 'registration',
+        el: '#component-registration',
+        props: { contentId: 22018157 },
+      });
+
+      bmc('loadComponent', {
         name: 'scheduling',
         el: '#component-scheduling',
         props: { contentId: 21577444 },
@@ -111,6 +117,13 @@
       <strong>We're sorry but this page doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div class="container">
+      <div class="row">
+        <div class="col" style="max-width: 380px;">
+          <h4>Registration</h4>
+          <div id="component-registration"></div>
+        </div>
+      </div>
+
       <div class="row">
         <div class="col" style="max-width: 380px;">
           <h4>Scheduling</h4>

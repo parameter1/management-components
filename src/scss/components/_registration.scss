@@ -1,0 +1,16 @@
+.bmc-registration-component {
+  @include bmc-base();
+  @include bmc-card();
+  @include bmc-card-body();
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .24);
+  .bmc-registration-field {
+    &--requires-registration {
+      margin-bottom: 12px;
+    }
+  }
+  .bmc-registration-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+}

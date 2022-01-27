@@ -39,7 +39,7 @@
 import query from '../../../graphql/scheduling/queries/list-email-schedules';
 import ListItem from './list-item.vue';
 import OperationError from '../../operation-error.vue';
-import RefreshButton from '../buttons/refresh.vue';
+import RefreshButton from '../../common/buttons/refresh.vue';
 import mapNodes from '../../utils/map-nodes';
 
 export default {

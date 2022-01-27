@@ -41,8 +41,8 @@ import mutation from '../../../graphql/scheduling/mutations/update-email-schedul
 import SelectSection from './select-section.vue';
 import EditSequence from './edit-sequence.vue';
 import EditDate from '../../edit-date.vue';
-import CancelButton from '../buttons/cancel.vue';
-import SaveButton from '../buttons/save.vue';
+import CancelButton from '../../common/buttons/cancel.vue';
+import SaveButton from '../../common/buttons/save.vue';
 import OperationError from '../../operation-error.vue';
 
 export default {

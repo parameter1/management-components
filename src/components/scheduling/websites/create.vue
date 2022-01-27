@@ -34,7 +34,7 @@
 <script>
 import mutation from '../../../graphql/scheduling/mutations/create-website-schedules';
 import SelectSections from './select-sections.vue';
-import AddButton from '../buttons/add.vue';
+import AddButton from '../../common/buttons/add.vue';
 import OperationError from '../../operation-error.vue';
 
 export default {
