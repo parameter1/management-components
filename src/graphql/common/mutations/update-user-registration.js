@@ -5,7 +5,7 @@ export default gql`
 
 mutation contentUserRegistration($input: ContentUserRegistrationMutationInput!) {
   contentUserRegistration(input: $input) {
-    ...UserRegistration
+    ...ContentUserRegistrationFragment
   }
 }
 

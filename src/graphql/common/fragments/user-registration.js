@@ -2,7 +2,9 @@ import gql from 'graphql-tag';
 
 export default gql`
 
-fragment UserRegistration on Content {
+fragment ContentUserRegistrationFragment on Content {
+  id
+  touched
   userRegistration {
     isRequired
     startDate
