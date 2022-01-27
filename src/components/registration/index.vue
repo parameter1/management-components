@@ -1,9 +1,9 @@
 <template>
-  <div class="bmc-primary-section-component">
+  <div class="bmc-registration-component">
     <loading-spinner v-if="isLoading" color="primary" size="small" />
     <div v-if="content">
-      <div class="bmc-user-registration-field">
-        <div class="bmc-user-registration-field-label">
+      <div class="bmc-registration-field">
+        <div class="bmc-registration-field-label">
           {{ description }}
         </div>
         <input
@@ -12,11 +12,11 @@
           class="custom-control-input"
           @change="handleIsRequiredChange()"
         >
-        <span class="bmc-user-registration-field-label">
+        <span class="bmc-registration-field-label">
           {{ label }}
         </span>
       </div>
-      <div class="bmc-schedule-field">
+      <div class="bmc-registration-field">
         <edit-date
           :value="currentStartDate"
           :max="currentEndDate"
@@ -41,7 +41,7 @@
         />
       </div>
     </div>
-    <div class="bmc-schedule-edit__buttons">
+    <div class="bmc-registration-buttons">
       <cancel-button :disabled="isSaveDisabled" @click="cancel" />
       <save-button :disabled="isSaveDisabled" :is-loading="isSaving" @click="update" />
     </div>
@@ -270,7 +270,7 @@ export default {
 @import "../../scss/variables";
 @import "../../scss/mixins";
 
-.bmc-primary-section-component {
+.bmc-registration-component {
   @include bmc-base();
 }
 </style>
