@@ -54,7 +54,7 @@ const bmc = (fn, ...args) => {
   throw new Error(`No BaseCMS command exists for '${fn}'`);
 };
 
-bmc.observable = Vue.observable;
+bmc.Vue = Vue;
 
 const { isArray } = Array;
 const { bmcQueue } = window;
