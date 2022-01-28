@@ -18,7 +18,7 @@
         <edit-date
           :value="startDate"
           :max="endDate"
-          :disabled="disabled"
+          :disabled="(disabled || !isRequired)"
           :can-clear="true"
           placeholder="Pick a start date..."
           title="Start Date"
@@ -29,7 +29,7 @@
         <edit-date
           :value="endDate"
           :min="startDate"
-          :disabled="disabled"
+          :disabled="(disabled || !isRequired)"
           :can-clear="true"
           placeholder="Pick an end date..."
           title="End Date"
