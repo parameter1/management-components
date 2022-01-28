@@ -60,16 +60,14 @@
 
       const registration = {
         isRequired: false,
-        startDate: new Date(),
+        startDate: null,
         endDate: null,
       };
 
       bmc('loadComponent', {
         name: 'registration',
         el: '#component-registration',
-        props: {
-          ...registration,
-        },
+        props: registration,
         on: {
           change: ({ field, value }) => {
             registration[field] = value;
