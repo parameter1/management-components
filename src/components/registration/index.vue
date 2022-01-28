@@ -22,7 +22,7 @@
           :can-clear="true"
           placeholder="Pick a start date..."
           title="Start Date"
-          @change="$emit('change', { field: 'startDate', value: $event })"
+          @input="$emit('change', { field: 'startDate', value: $event })"
         />
       </div>
       <div class="bmc-schedule-field">
@@ -33,7 +33,7 @@
           :can-clear="true"
           placeholder="Pick an end date..."
           title="End Date"
-          @change="$emit('change', { field: 'endDate', value: $event })"
+          @input="$emit('change', { field: 'endDate', value: $event })"
         />
       </div>
     </div>

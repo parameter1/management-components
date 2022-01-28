@@ -16,7 +16,7 @@
           :value="currentDeploymentDate"
           :disabled="isSaving"
           title="Deployment Date"
-          @change="setDeploymentDate"
+          @input="setDeploymentDate"
         />
       </div>
       <div class="bmc-schedule-field">
