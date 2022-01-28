@@ -310,7 +310,7 @@
 
   &--disabled,
   &:disabled {
-    cursor: default;
+    cursor: not-allowed;
     box-shadow: none;
     opacity: $bmc-button-disabled-opacity;
   }
