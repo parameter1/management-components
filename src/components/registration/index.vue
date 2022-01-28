@@ -8,7 +8,7 @@
           :disabled="disabled"
           type="checkbox"
           class="custom-control-input"
-          @change="$emit('change', { field: 'isRequired', value: $event.target.checked })"
+          @change="handleRequiredChange"
         >
         <label for="requires-registration" class="bmc-registration-field-label">
           {{ description }}
@@ -18,22 +18,22 @@
         <edit-date
           :value="startDate"
           :max="endDate"
-          :disabled="disabled"
+          :disabled="(disabled || !isRequired)"
           :can-clear="true"
           placeholder="Pick a start date..."
           title="Start Date"
-          @change="$emit('change', { field: 'startDate', value: $event })"
+          @input="$emit('change', { field: 'startDate', value: $event })"
         />
       </div>
       <div class="bmc-schedule-field">
         <edit-date
           :value="endDate"
           :min="startDate"
-          :disabled="disabled"
+          :disabled="(disabled || !isRequired)"
           :can-clear="true"
           placeholder="Pick an end date..."
           title="End Date"
-          @change="$emit('change', { field: 'endDate', value: $event })"
+          @input="$emit('change', { field: 'endDate', value: $event })"
         />
       </div>
     </div>
@@ -68,6 +68,17 @@ export default {
   },
   components: {
     EditDate,
+  },
+
+  methods: {
+    handleRequiredChange(event) {
+      const { checked } = event.target;
+      this.$emit('change', { field: 'isRequired', value: checked });
+      if (!checked) {
+        this.$emit('change', { field: 'startDate', value: null });
+        this.$emit('change', { field: 'endDate', value: null });
+      }
+    },
   },
 };
 </script>

@@ -26,7 +26,7 @@
           :disabled="isSaving"
           placeholder="Pick a start date..."
           title="Start Date"
-          @change="setStartDate"
+          @input="setStartDate"
         />
       </div>
       <div class="bmc-schedule-field">
@@ -37,7 +37,7 @@
           :can-clear="true"
           placeholder="Pick an end date..."
           title="End Date"
-          @change="setEndDate"
+          @input="setEndDate"
         />
       </div>
     </div>

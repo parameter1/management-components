@@ -54,22 +54,20 @@
       bmc('configure', {
         graphqlUri: 'https://graphql.tauron.base.parameter1.com',
         tenantKey: 'p1_sandbox',
-        baseApiUri: 'https://p1-sandbox.manage.base.parameter1.com',
+        baseApiUri: 'https://manage.parameter1.dev',
         debug: true,
       });
 
       const registration = {
         isRequired: false,
-        startDate: new Date(),
+        startDate: null,
         endDate: null,
       };
 
       bmc('loadComponent', {
         name: 'registration',
         el: '#component-registration',
-        props: {
-          ...registration,
-        },
+        props: registration,
         on: {
           change: ({ field, value }) => {
             registration[field] = value;

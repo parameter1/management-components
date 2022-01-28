@@ -1,6 +1,6 @@
 <template>
   <datetime
-    v-model="currentValue"
+    :value="valueISO"
     type="datetime"
     :placeholder="placeholder"
     :disabled="disabled"
@@ -12,7 +12,7 @@
     :max-datetime="maxISO"
     use12-hour
     auto
-    @input="emitChange"
+    @input="emit"
   >
     <template slot="button-cancel">
       <x-icon /> Cancel
@@ -32,8 +32,8 @@
           icon="x"
           label="Clear date"
           :outline="true"
-          :disabled="clearDisabled"
-          @click="clear"
+          :disabled="!valueISO || disabled"
+          @click="$emit('input', null)"
         />
       </div>
     </template>
@@ -84,10 +84,6 @@ export default {
     },
   },
 
-  data: () => ({
-    selectedValue: undefined,
-  }),
-
   mounted() {
     this.$el.classList.add('bmc-input-group');
   },
@@ -101,14 +97,6 @@ export default {
   },
 
   computed: {
-    currentValue: {
-      get() {
-        return this.selectedValue === undefined ? this.valueISO : this.selectedValue;
-      },
-      set(v) {
-        this.selectedValue = v;
-      },
-    },
     valueISO() {
       return convertToISO(this.value);
     },
@@ -118,21 +106,11 @@ export default {
     maxISO() {
       return convertToISO(this.max);
     },
-    clearDisabled() {
-      return !this.currentValue;
-    },
   },
 
   methods: {
-    clear() {
-      this.selectedValue = '';
-      this.emitChange(this.selectedValue);
-    },
-    reset(date) {
-      this.selectedValue = date;
-    },
-    emitChange(value) {
-      this.$emit('change', value ? new Date(value) : null);
+    emit(value) {
+      this.$emit('input', value ? new Date(value) : null);
     },
   },
 };
