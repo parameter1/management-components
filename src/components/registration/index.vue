@@ -1,7 +1,7 @@
 <template>
   <div class="bmc-registration-component">
     <loading-spinner v-if="isLoading" color="primary" size="small" />
-    <div v-if="content">
+    <div>
       <div class="bmc-registration-field bmc-registration-field--requires-registration">
         <input
           id="requires-registration"
@@ -39,8 +39,8 @@
         />
       </div>
     </div>
-    <div class="bmc-registration-buttons">
-      <cancel-button :disabled="isSaveDisabled" @click="cancel" />
+    <div v-if="(cancelEnabled || saveEnabled)" class="bmc-registration-buttons">
+      <cancel-button v-if="cancelEnabled" :disabled="isSaveDisabled" @click="cancel" />
       <save-button
         v-if="saveEnabled"
         :disabled="isSaveDisabled"
@@ -85,6 +85,10 @@ const clearSeconds = (date) => {
 export default {
   props: {
     saveEnabled: {
+      type: Boolean,
+      default: true,
+    },
+    cancelEnabled: {
       type: Boolean,
       default: true,
     },
