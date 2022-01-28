@@ -8,7 +8,7 @@
           :disabled="disabled"
           type="checkbox"
           class="custom-control-input"
-          @change="$emit('change', { field: 'isRequired', value: $event.target.checked })"
+          @change="handleRequiredChange"
         >
         <label for="requires-registration" class="bmc-registration-field-label">
           {{ description }}
@@ -68,6 +68,17 @@ export default {
   },
   components: {
     EditDate,
+  },
+
+  methods: {
+    handleRequiredChange(event) {
+      const { checked } = event.target;
+      this.$emit('change', { field: 'isRequired', value: checked });
+      if (!checked) {
+        this.$emit('change', { field: 'startDate', value: null });
+        this.$emit('change', { field: 'endDate', value: null });
+      }
+    },
   },
 };
 </script>
