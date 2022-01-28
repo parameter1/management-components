@@ -34,7 +34,7 @@ const loadComponent = async ({
   new Vue({
     el,
     apolloProvider: getApolloProvider(),
-    render: h => h(Component, { props, on }),
+    render: h => h(Component, { props: Vue.observable(props), on }),
   });
   if (debug()) console.info(`BMC '${name}' mounted`, { el, props, on });
 };
@@ -54,12 +54,23 @@ const bmc = (fn, ...args) => {
   throw new Error(`No BaseCMS command exists for '${fn}'`);
 };
 
+bmc.observable = Vue.observable;
+
 const { isArray } = Array;
 const { bmcQueue } = window;
 
+const onReady = [];
 if (isArray(bmcQueue)) {
   bmcQueue.forEach((args) => {
-    bmc(...args);
+    const [fnName] = args;
+    if (fnName === 'onReady') {
+      onReady.push(args[1]);
+    } else {
+      bmc(...args);
+    }
   });
 }
 window.bmc = bmc;
+onReady.forEach((fn) => {
+  if (typeof fn === 'function') fn();
+});
