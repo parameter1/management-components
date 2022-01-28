@@ -58,10 +58,23 @@
         debug: true,
       });
 
+      const registration = {
+        isRequired: false,
+        startDate: new Date(),
+        endDate: null,
+      };
+
       bmc('loadComponent', {
         name: 'registration',
         el: '#component-registration',
-        props: { contentId: 22018157 },
+        props: {
+          ...registration,
+        },
+        on: {
+          change: ({ field, value }) => {
+            registration[field] = value;
+          },
+        },
       });
 
       bmc('loadComponent', {
