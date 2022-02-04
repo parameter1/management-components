@@ -84,8 +84,13 @@ export default {
     },
   },
 
+  data: () => ({
+    ready: false,
+  }),
+
   mounted() {
     this.$el.classList.add('bmc-input-group');
+    if (!this.ready) this.ready = true;
   },
 
   components: {
@@ -110,7 +115,7 @@ export default {
 
   methods: {
     emit(value) {
-      this.$emit('input', value ? new Date(value) : null);
+      if (this.ready) this.$emit('input', value ? new Date(value) : null);
     },
   },
 };
