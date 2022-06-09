@@ -1,11 +1,24 @@
 <template>
   <div class="bmc-registration-component">
     <div>
+      <div class="bmc-registration-field bmc-registration-field--bypass-gating">
+        <input
+          id="bypass-gating"
+          :checked="bypassGating"
+          :disabled="disabled"
+          type="checkbox"
+          class="custom-control-input"
+          @change="handleBypassChange"
+        />
+        <label for="bypass-gating" class="bmc-registration-field-label">
+          Should this item bypass all gating rules?
+        </label>
+      </div>
       <div class="bmc-registration-field bmc-registration-field--requires-registration">
         <input
           id="requires-registration"
           :checked="isRequired"
-          :disabled="disabled"
+          :disabled="regDisabled"
           type="checkbox"
           class="custom-control-input"
           @change="handleRequiredChange"
@@ -18,7 +31,7 @@
         <edit-date
           :value="startDate"
           :max="endDate"
-          :disabled="(disabled || !isRequired)"
+          :disabled="(regDisabled || !isRequired)"
           :can-clear="true"
           placeholder="Pick a start date..."
           title="Start Date"
@@ -29,7 +42,7 @@
         <edit-date
           :value="endDate"
           :min="startDate"
-          :disabled="(disabled || !isRequired)"
+          :disabled="(regDisabled || !isRequired)"
           :can-clear="true"
           placeholder="Pick an end date..."
           title="End Date"
@@ -65,9 +78,19 @@ export default {
       type: Boolean,
       default: false,
     },
+    bypassGating: {
+      type: Boolean,
+      default: false,
+    },
   },
   components: {
     EditDate,
+  },
+
+  computed: {
+    regDisabled() {
+      return this.disabled || this.bypassGating;
+    },
   },
 
   methods: {
@@ -78,6 +101,15 @@ export default {
         this.$emit('change', { field: 'startDate', value: null });
         this.$emit('change', { field: 'endDate', value: null });
       }
+    },
+    handleBypassChange(event) {
+      const { checked } = event.target;
+      if (checked) {
+        this.$emit('change', { field: 'isRequired', value: false });
+        this.$emit('change', { field: 'startDate', value: null });
+        this.$emit('change', { field: 'endDate', value: null });
+      }
+      this.$emit('change', { field: 'bypassGating', value: checked });
     },
   },
 };

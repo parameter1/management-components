@@ -5,7 +5,15 @@
   box-shadow: 0 1px 3px rgba(0, 0, 0, .24);
   .bmc-registration-field {
     &--requires-registration {
+      display: flex;
+      align-items: center;
       margin-bottom: 12px;
+    }
+    & > input[type="checkbox"] {
+      margin: 1rem;
+    }
+    & > label {
+      margin: 0;
     }
   }
   .bmc-registration-buttons {
